@@ -1,0 +1,19 @@
+version: '3.7'
+
+services:
+  db:
+    image: postgres:11
+    environment: 
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: beer
+  web:
+    build: .
+    # command: python /code/manage.py runserver 0.0.0.0:8000
+    command: gunicorn api.wsgi:application --bind 0.0.0.0:8000 --workers 4
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on: 
+      - db
